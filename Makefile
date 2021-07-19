@@ -1,7 +1,8 @@
-TARGET := target/KRust-x86_64/debug/bootimage-KRust.bin
+TARGET := Kernel/target/KRust-x86_64/debug/bootimage-KRust.bin
 
 build:
-	cargo build
+	cd Kernel && \
+	cargo build && \
 	cargo bootimage
 
 run:
@@ -14,4 +15,5 @@ setup:
 	cargo install bootimage
 
 clean:
+	cd Kernel && \
 	cargo clean
