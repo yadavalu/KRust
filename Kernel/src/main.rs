@@ -5,22 +5,15 @@ use core::panic::PanicInfo;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
+	errorln!("{}", _info);
 	loop {}
 }
 
-
-static kernel: &[u8] = b"Loading KRust kernel ...";
+mod vga;
+use core::fmt::Write;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-	let vga_buffer = 0xb8000 as *mut u8;
-
-	for (i, &byte) in kernel.iter().enumerate() {
-		unsafe {
-			*vga_buffer.offset(i as isize * 2) = byte;
-			*vga_buffer.offset(i as isize * 2 + 1) = 0xb;
-		}
-	}
-
+    println!("Loading KRust kernel version {}", 0.1);
 	loop {}
 }
