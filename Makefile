@@ -1,9 +1,15 @@
-TARGET := Kernel/target/KRust-x86_64/debug/bootimage-KRust.bin
+TARGET := kernel/target/KRust-x86_64/debug/bootimage-KRust.bin
+DIRECTORIES := vga/ kernel/  # $(sort $(dir $(wildcard ./*/)))
 
 build:
-	cd Kernel && \
-	cargo build && \
-	cargo bootimage
+	@for folders in $(DIRECTORIES) ; do \
+		echo -n "Compiling " && \
+		echo -n $$folders && \
+		echo -e " ...\n" && \
+		cd $$folders && cargo build && cd ../ && echo -e '\n' ; \
+	done
+
+	cd kernel && cargo bootimage
 
 run:
 	qemu-system-x86_64 -drive format=raw,file=$(TARGET)
@@ -15,5 +21,6 @@ setup:
 	cargo install bootimage
 
 clean:
-	cd Kernel && \
-	cargo clean
+	for folders in $(DIRECTORIES); do \
+		cd folders && cargo clean; \
+	done;
